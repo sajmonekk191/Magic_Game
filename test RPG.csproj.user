@@ -1,16 +1,28 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Compile Update="Essentials\GameObjects\Food.cs">
+    <Compile Update="Essentials\GameObjectsGame1\Food.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Update="Essentials\GameObjects\Gate.cs">
+    <Compile Update="Essentials\GameObjectsGame1\Gate.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Update="Essentials\GameObjects\Player.cs">
+    <Compile Update="Essentials\GameObjectsGame1\Player.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Update="Form1.cs">
+    <Compile Update="Essentials\GameObjectsGame2\Block.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Essentials\GameObjectsGame2\Pickaxe.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Essentials\GameObjectsGame2\Player.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Game1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Game2.cs">
       <SubType>Form</SubType>
     </Compile>
   </ItemGroup>

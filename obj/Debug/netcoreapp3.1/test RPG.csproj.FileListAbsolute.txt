@@ -5,7 +5,6 @@ C:\Users\Root\source\repos\test RPG\test RPG\bin\Debug\netcoreapp3.1\test RPG.ru
 C:\Users\Root\source\repos\test RPG\test RPG\bin\Debug\netcoreapp3.1\test RPG.dll
 C:\Users\Root\source\repos\test RPG\test RPG\bin\Debug\netcoreapp3.1\test RPG.pdb
 C:\Users\Root\source\repos\test RPG\test RPG\obj\Debug\netcoreapp3.1\test RPG.csproj.AssemblyReference.cache
-C:\Users\Root\source\repos\test RPG\test RPG\obj\Debug\netcoreapp3.1\test_RPG.Form1.resources
 C:\Users\Root\source\repos\test RPG\test RPG\obj\Debug\netcoreapp3.1\test_RPG.Properties.Resources.resources
 C:\Users\Root\source\repos\test RPG\test RPG\obj\Debug\netcoreapp3.1\test RPG.csproj.GenerateResource.cache
 C:\Users\Root\source\repos\test RPG\test RPG\obj\Debug\netcoreapp3.1\test RPG.GeneratedMSBuildEditorConfig.editorconfig
@@ -15,3 +14,5 @@ C:\Users\Root\source\repos\test RPG\test RPG\obj\Debug\netcoreapp3.1\test RPG.cs
 C:\Users\Root\source\repos\test RPG\test RPG\obj\Debug\netcoreapp3.1\test RPG.dll
 C:\Users\Root\source\repos\test RPG\test RPG\obj\Debug\netcoreapp3.1\test RPG.pdb
 C:\Users\Root\source\repos\test RPG\test RPG\obj\Debug\netcoreapp3.1\test RPG.genruntimeconfig.cache
+C:\Users\Root\source\repos\test RPG\test RPG\obj\Debug\netcoreapp3.1\test_RPG.Game1.resources
+C:\Users\Root\source\repos\test RPG\test RPG\obj\Debug\netcoreapp3.1\test_RPG.Game2.resources
