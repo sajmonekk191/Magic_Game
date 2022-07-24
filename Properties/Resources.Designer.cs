@@ -83,9 +83,9 @@ namespace test_RPG.Properties {
         /// <summary>
         ///   Vyhledává lokalizovaný prostředek typu System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap dirt_block {
+        internal static System.Drawing.Bitmap Dirt_Block {
             get {
-                object obj = ResourceManager.GetObject("dirt_block", resourceCulture);
+                object obj = ResourceManager.GetObject("Dirt_Block", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -123,9 +123,9 @@ namespace test_RPG.Properties {
         /// <summary>
         ///   Vyhledává lokalizovaný prostředek typu System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap grass_block {
+        internal static System.Drawing.Bitmap Grass_Block {
             get {
-                object obj = ResourceManager.GetObject("grass_block", resourceCulture);
+                object obj = ResourceManager.GetObject("Grass_Block", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -41,13 +41,14 @@
             this.levellbl.Size = new System.Drawing.Size(76, 28);
             this.levellbl.TabIndex = 3;
             this.levellbl.Text = "Level: 1";
+            this.levellbl.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // Game2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.DarkTurquoise;
-            this.ClientSize = new System.Drawing.Size(991, 650);
+            this.ClientSize = new System.Drawing.Size(984, 650);
             this.Controls.Add(this.levellbl);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "Game2";

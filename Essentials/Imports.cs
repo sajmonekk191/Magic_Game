@@ -16,6 +16,14 @@ namespace test_RPG.Essentials
             else if (((key1 >> 15) & 0x0001) == 0x0001) return true;
             else return false;
         }
+        public static bool isUpReleased()
+        {
+            short key = GetAsyncKeyState(Keys.W);
+            short key1 = GetAsyncKeyState(Keys.Up);
+            if (((key >> 15) & 0x0001) == 0x0000) return true;
+            else if (((key1 >> 15) & 0x0001) == 0x0000) return true;
+            else return false;
+        }
         public static bool isDownPressed()
         {
             short key = GetAsyncKeyState(Keys.S);

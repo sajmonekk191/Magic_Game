@@ -21,7 +21,6 @@ namespace test_RPG.Essentials.GameObjectsGame2
             this.Image = Properties.Resources.Diamond_Pickaxe_Right;
             this.SizeMode = PictureBoxSizeMode.Zoom;
             game.Controls.Add(this);
-            this.BringToFront();
         }
     }
 }

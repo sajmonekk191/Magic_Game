@@ -14,12 +14,8 @@ namespace test_RPG
         private int speed = 5;
         private Timer GameTimer = new Timer();
         private Timer timeleft = new Timer();
-        private int FPS = 2;
         private Random random = new Random();
         private bool foodeaten = true;
-        private int score = 0;
-        private int level = 1;
-        private bool gateeaten = false;
         public Game1()
         {
             InitializeComponent();
@@ -34,10 +30,12 @@ namespace test_RPG
             GameTimer.Enabled = true;
             timeleft.Enabled = true;
             GameTimer.Interval = 100;
-            GameTimer.Interval = FPS;
+            GameTimer.Interval = hodnoty.FPS;
             GameTimer.Tick += new EventHandler(Updater);
             timeleft.Tick += new EventHandler(timeleftevent);
             timebar.Value = 100;
+            levellbl.Text = "Level: " + hodnoty.level;
+            scorelbl.Text = "Score: " + hodnoty.score;
         }
         private void Updater(Object Object, EventArgs EventArgs)
         {
@@ -76,9 +74,9 @@ namespace test_RPG
                     if (player.Bounds.IntersectsWith(i.Bounds))
                     {
                         foodeaten = true;
-                        score++;
+                        hodnoty.score++;
                         this.Controls.Remove(i);
-                        scorelbl.Text = "Score: " + score.ToString();
+                        scorelbl.Text = "Score: " + hodnoty.score.ToString();
                         try { timebar.Value += 10; }
                         catch { timebar.Value = 100; }
                     }
@@ -87,8 +85,8 @@ namespace test_RPG
                 {
                     if (player.Bounds.IntersectsWith(i.Bounds))
                     {
-                        level++;
-                        RenderLVL(level);
+                        hodnoty.level++;
+                        RenderLVL(hodnoty.level);
                         this.Controls.Remove(i);
                     }
                 }
@@ -96,15 +94,15 @@ namespace test_RPG
         }
         private void timeleftevent(Object myObject, EventArgs myEventArgs)
         {
-            if (score <= 10) ScoreCalculator(1);
-            if (score >= 10 && score <= 20) ScoreCalculator(2);
-            if (score >= 20 && score <= 30) ScoreCalculator(3);
+            if (hodnoty.score <= 10) ScoreCalculator(1);
+            if (hodnoty.score >= 10 && hodnoty.score <= 20) ScoreCalculator(2);
+            if (hodnoty.score >= 20 && hodnoty.score <= 30) ScoreCalculator(3);
         }
         private void GameOver()
         {
             GameTimer.Enabled = false;
             timeleft.Enabled = false;
-            MessageBox.Show("Game Over!\nYour Score: " + score, "Game", MessageBoxButtons.OK);
+            MessageBox.Show("Game Over!\nYour Score: " + hodnoty.score, "Game", MessageBoxButtons.OK);
             Environment.Exit(0);
         }
         private void ScoreCalculator(int value)
@@ -115,25 +113,22 @@ namespace test_RPG
         private void Gatepercent()
         {
             int value = 0;
-            if (score > 13)
+            if (hodnoty.score > 13)
             {
-                value = 0;
                 value = random.Next(0, 10);
             }
-            if (score > 20)
+            if (hodnoty.score > 20)
             {
-                value = 0;
                 value = random.Next(5, 10);
             }
-            if (score > 25)
+            if (hodnoty.score > 25)
             {
-                value = 0;
                 value = random.Next(7, 10);
             }
-            if (value > 0)
+            if (value > 8)
             {
                 gate.Spawn();
-                if (level == 2) gate.Image = Properties.Resources.Final_Gate;
+                if (hodnoty.level == 2) gate.Image = Properties.Resources.Final_Gate;
                 gate.Location = new Point(random.Next(0, 600), random.Next(0, 600));
                 gate.Visible = true;
             }
@@ -144,8 +139,8 @@ namespace test_RPG
             {
                 case 2:
                     timebar.Value = 100;
-                    levellbl.Text = "Level: " + level.ToString();
-                    scorelbl.Text = "Score: " + score.ToString();
+                    levellbl.Text = "Level: " + hodnoty.level.ToString();
+                    scorelbl.Text = "Score: " + hodnoty.score.ToString();
                     this.BackColor = Color.MediumBlue;
                     break;
                 case 3:
