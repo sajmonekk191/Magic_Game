@@ -28,20 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.levellbl = new System.Windows.Forms.Label();
+            this.scorelbl = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // levellbl
+            // scorelbl
             // 
-            this.levellbl.AutoSize = true;
-            this.levellbl.Font = new System.Drawing.Font("Segoe UI", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.levellbl.ForeColor = System.Drawing.SystemColors.Control;
-            this.levellbl.Location = new System.Drawing.Point(12, 9);
-            this.levellbl.Name = "levellbl";
-            this.levellbl.Size = new System.Drawing.Size(76, 28);
-            this.levellbl.TabIndex = 3;
-            this.levellbl.Text = "Level: 1";
-            this.levellbl.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.scorelbl.AutoSize = true;
+            this.scorelbl.Font = new System.Drawing.Font("Segoe UI", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.scorelbl.ForeColor = System.Drawing.SystemColors.Control;
+            this.scorelbl.Location = new System.Drawing.Point(12, 9);
+            this.scorelbl.Name = "scorelbl";
+            this.scorelbl.Size = new System.Drawing.Size(81, 28);
+            this.scorelbl.TabIndex = 3;
+            this.scorelbl.Text = "Score: 1";
             // 
             // Game2
             // 
@@ -49,7 +48,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.MediumTurquoise;
             this.ClientSize = new System.Drawing.Size(984, 650);
-            this.Controls.Add(this.levellbl);
+            this.Controls.Add(this.scorelbl);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "Game2";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -62,6 +61,6 @@
 
         #endregion
 
-        private System.Windows.Forms.Label levellbl;
+        private System.Windows.Forms.Label scorelbl;
     }
 }

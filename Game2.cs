@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using test_RPG.Essentials;
@@ -19,9 +20,11 @@ namespace test_RPG
         private System.Windows.Forms.Timer GameTimer = new System.Windows.Forms.Timer();
         private int speed = 5;
         private int gravity = 10;
+        private int itemgravity = 5;
         private int FPS = 2;
         private int jumpintensity;
         private bool jump;
+        private int score = 0;
         public Game2()
         {
             InitializeComponent();
@@ -29,6 +32,10 @@ namespace test_RPG
 
         private void Game2_Load(object sender, EventArgs e)
         {
+            this.Size = new System.Drawing.Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
+            this.FormBorderStyle = FormBorderStyle.None;
+            this.TopMost = true;
+            this.WindowState = FormWindowState.Maximized;
             player = new Player(this);
             pickaxe = new Pickaxe(this);
             inventory = new Inventory(this);
@@ -39,6 +46,7 @@ namespace test_RPG
             pickaxe.BringToFront();
             player.Location = new Point(19, 428);
             pickaxe.Location = new Point(player.Location.X + 38, player.Location.Y + 12);
+            inventory.Location = new Point(860, 1020);
             GameTimer.Enabled = true;
             GameTimer.Interval = FPS;
             GameTimer.Tick += new EventHandler(Updater);
@@ -77,6 +85,7 @@ namespace test_RPG
             {
                 hodnoty.inventoryindex = 1;
                 InventorySelector("sword", hodnoty.isleft);
+
             }
             if (Imports.isinventoryindex2())
             {
@@ -90,15 +99,6 @@ namespace test_RPG
             }
             foreach (Control i in this.Controls)
             {
-                if (i is PictureBox && i.Tag == "platform")
-                {
-                    if (player.Bounds.IntersectsWith(i.Bounds) && !jump)
-                    {
-                        gravity = 0;
-                        jumpintensity = 13;
-                        player.Top = i.Top - 71;
-                    }
-                }
                 if (i is PictureBox && i.Tag == "breakable")
                 {
                     if (PlayerCollider(player).IntersectsWith(BlockColliderDown(i.Bounds)))
@@ -122,9 +122,20 @@ namespace test_RPG
                     var MousePos = this.PointToClient(Cursor.Position);
                     if (MouseCollider(MousePos.X, MousePos.Y).IntersectsWith(i.Bounds) && MouseCollider(MousePos.X, MousePos.Y).IntersectsWith(RangeCalculator(player.Location.X, player.Location.Y)) && Imports.isAttackPressed())
                     {
+                        Image res = i.BackgroundImage;
                         i.Dispose();
+                        MakeItem(res, "item", Color.Transparent, 25, 25, i.Location.X + 10, i.Location.Y + 30, false);
                     }
                     pickaxe.Location = new Point(pickaxe.Location.X, player.Location.Y + 12);
+                }
+                if (i is PictureBox && i.Tag == "item")
+                {
+                    if (PlayerCollider(player).IntersectsWith(i.Bounds))
+                    {
+                        score++;
+                        scorelbl.Text = "Score: " + score;
+                        i.Dispose();
+                    }
                 }
             }
             player.Top += gravity;
@@ -136,82 +147,72 @@ namespace test_RPG
             {
                 case 3:
                     // Ground //
-                    for (int g = 0; g < 19; g++)
+                    for (int g = 0; g < 37; g++)
                     {
                         x = 52 * g;
-                        y = 500;
-                        MakePlatforms(Properties.Resources.Grass_Block, "platform");
+                        y = 760;
+                        MakePlatforms(Properties.Resources.Grass_Block, "breakable", x, y, true);
                     }
-                    for (int d = 0; d < 19; d++)
+                    for (int d = 0; d < 37; d++)
                     {
                         x = 52 * d;
-                        y = 552;
-                        MakePlatforms(Properties.Resources.Dirt_Block, "platform");
+                        y = 812;
+                        MakePlatforms(Properties.Resources.Dirt_Block, "breakable", x, y, true);
                     }
-                    for (int e = 0; e < 19; e++)
+                    for (int e = 0; e < 37; e++)
                     {
                         x = 52 * e;
-                        y = 604;
-                        MakePlatforms(Properties.Resources.Dirt_Block, "platform");
+                        y = 864;
+                        MakePlatforms(Properties.Resources.Dirt_Block, "breakable", x, y, true);
+                    }
+                    for (int e = 0; e < 37; e++)
+                    {
+                        x = 52 * e;
+                        y = 916;
+                        MakePlatforms(Properties.Resources.Stone, "breakable", x, y, true);
+                    }
+                    for (int e = 0; e < 37; e++)
+                    {
+                        x = 52 * e;
+                        y = 968;
+                        MakePlatforms(Properties.Resources.Stone, "breakable", x, y, true);
+                    }
+                    for (int e = 0; e < 37; e++)
+                    {
+                        x = 52 * e;
+                        y = 1020;
+                        MakePlatforms(Properties.Resources.Stone, "breakable", x, y, true);
+                    }
+                    for (int e = 0; e < 37; e++)
+                    {
+                        x = 52 * e;
+                        y = 1072;
+                        MakePlatforms(Properties.Resources.Stone, "breakable", x, y, true);
                     }
                     // Ground //
 
                     // Tree //
-                    for (int e = 0; e < 4; e++)
-                    {
-                        x = 752;
-                        y = 344 + (52 * e);
-                        MakePlatforms(Properties.Resources.Wood, "breakable");
-                    }
-                    for (int e = 0; e < 6; e++)
-                    {
-                        if (e >= 0 && e <= 2)
-                        {
-                            x = 700 + (52 * e);
-                            y = 240 - 52;
-                            MakePlatforms(Properties.Resources.Leaves, "breakable");
-                        }
-                        if(e == 4)
-                        {
-                            for(int g = 0;g < 5;g++)
-                            {
-                                x = 648 + (52 * g);
-                                y = 292 - 52;
-                                MakePlatforms(Properties.Resources.Leaves, "breakable");
-                            }
-                        }
-                        if (e == 5)
-                        {
-                            for (int g = 0; g < 5; g++)
-                            {
-                                x = 648 + (52 * g);
-                                y = 344 - 52;
-                                MakePlatforms(Properties.Resources.Leaves, "breakable");
-                            }
-                        }
-                    }
-                    x = 348;
-                    y = 404;
-                    MakePlatforms(Properties.Resources.Leaves, "breakable");
+                    SpawnTree(700, 608);
+                    SpawnTree(1200, 608);
+                    SpawnTree(1500, 608);
                     // Tree //
 
                     // Inventory //
-                    x = 406;
-                    y = 596;
-                    MakeItem(Properties.Resources.Diamond_Sword_Right, Color.DimGray, 48, 48);
+                    x = 866;
+                    y = 1026;
+                    MakeItem(Properties.Resources.Diamond_Sword_Right, "hotbar", Color.DimGray, 48, 48, x, y, false);
                     x = x + 60;
-                    MakeItem(Properties.Resources.Diamond_Pickaxe_Right, Color.DimGray, 48, 48);
+                    MakeItem(Properties.Resources.Diamond_Pickaxe_Right, "hotbar", Color.DimGray, 48, 48, x, y, false);
                     x = x + 60;
-                    MakeItem(Properties.Resources.Diamond_Axe_Right, Color.DimGray, 48, 48);
+                    MakeItem(Properties.Resources.Diamond_Axe_Right, "hotbar", Color.DimGray, 48, 48, x, y, false);
                     // Inventory //
                     pickaxe.SendToBack();
                     player.SendToBack();
-                    foreach (Control i in this.Controls) if (i is PictureBox && i.Tag == "item") i.BringToFront();
-
+                    foreach (Control i in this.Controls) if (i is PictureBox && i.Tag == "hotbar") i.BringToFront();
                     break;
             }
         }
-        private void MakePlatforms(Image material, string tag)
+        private void MakePlatforms(Image material, string tag, int x1, int y1, bool backimg)
         {
             PictureBox block = new PictureBox();
             block.Tag = tag;
@@ -219,22 +220,24 @@ namespace test_RPG
             block.Height = 52;
             block.Width = 52;
             block.Image = material;
+            if (backimg) block.BackgroundImage = material;
             block.SizeMode = PictureBoxSizeMode.Zoom;
-            block.Location = new Point(x, y);
+            block.Location = new Point(x1, y1);
             block.BringToFront();
 
             this.Controls.Add(block);
         }
-        private void MakeItem(Image material, Color color, int x1, int y1)
+        private void MakeItem(Image material, string tag, Color color, int x1, int y1, int x2, int y2, bool backimg)
         {
             PictureBox item = new PictureBox();
-            item.Tag = "item";
+            item.Tag = tag;
             item.BackColor = color;
             item.Height = x1;
             item.Width = y1;
             item.Image = material;
+            if(backimg) item.BackgroundImage = material;
             item.SizeMode = PictureBoxSizeMode.Zoom;
-            item.Location = new Point(x, y);
+            item.Location = new Point(x2, y2);
             item.BringToFront();
 
             this.Controls.Add(item);
@@ -242,9 +245,7 @@ namespace test_RPG
         private void Barrier()
         {
             if (player.Location.X < 1) player.Location = new Point(player.Location.X + 10, player.Location.Y);
-            if (player.Location.X > 940) player.Location = new Point(player.Location.X - 10, player.Location.Y);
-            if (player.Location.Y < 5) player.Location = new Point(player.Location.X, player.Location.Y + 10);
-            if (player.Location.Y > 585) player.Location = new Point(player.Location.X, player.Location.Y - 10);
+            if (player.Location.X > 1890) player.Location = new Point(player.Location.X - 10, player.Location.Y);
         }
         private void InventorySelector(string selected, bool isleft)
         {
@@ -277,6 +278,53 @@ namespace test_RPG
                 case 3:
                     InventorySelector("axe", hodnoty.isleft);
                     break;
+            }
+        }
+        private void SpawnTree(int x, int y)
+        {
+            int ofset = 52;
+            int x1 = x;
+            int y1 = y;
+            for (int e = 0; e < 3; e++)
+            {
+                y1 = y + (52 * e);
+                MakePlatforms(Properties.Resources.Wood, "breakable", x1, y1, true);
+            }
+            x1 = x1 - 2 * ofset;
+            y1 = y1 - 5 * ofset;
+            for (int e = 0; e < 6; e++)
+            {
+                if (e >= 0 && e <= 2)
+                {
+                    x1 = x1 + 52;
+                    MakePlatforms(Properties.Resources.Leaves, "breakable", x1, y1, true);
+                    if (e > 1)
+                    {
+                        x1 = x1 - 4 * ofset;
+                        y1 = y1 + ofset;
+                    }
+                }
+                if (e == 4)
+                {
+                    for (int g = 0; g < 5; g++)
+                    {
+                        x1 = x1 + 52;
+                        MakePlatforms(Properties.Resources.Leaves, "breakable", x1, y1, true);
+                        if (g > 3)
+                        {
+                            y1 = y1 + 52;
+                            x1 = x1 - 5 * ofset;
+                        }
+                    }
+                }
+                if (e == 5)
+                {
+                    for (int g = 0; g < 5; g++)
+                    {
+                        x1 = x1 + 52;
+                        MakePlatforms(Properties.Resources.Leaves, "breakable", x1, y1, true);
+                    }
+                }
             }
         }
     }
