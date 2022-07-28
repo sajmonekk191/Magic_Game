@@ -48,5 +48,29 @@ namespace test_RPG.Essentials
             else if (((key1 >> 15) & 0x0001) == 0x0001) return true;
             else return false;
         }
+        public static bool isAttackPressed()
+        {
+            short key = GetAsyncKeyState(Keys.LButton);
+            if (((key >> 15) & 0x0001) == 0x0001) return true;
+            else return false;
+        }
+        public static bool isinventoryindex1()
+        {
+            short key = GetAsyncKeyState(Keys.D1);
+            if (((key >> 15) & 0x0001) == 0x0001) return true;
+            else return false;
+        }
+        public static bool isinventoryindex2()
+        {
+            short key = GetAsyncKeyState(Keys.D2);
+            if (((key >> 15) & 0x0001) == 0x0001) return true;
+            else return false;
+        }
+        public static bool isinventoryindex3()
+        {
+            short key = GetAsyncKeyState(Keys.D3);
+            if (((key >> 15) & 0x0001) == 0x0001) return true;
+            else return false;
+        }
     }
 }

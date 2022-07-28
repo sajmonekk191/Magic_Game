@@ -10,6 +10,9 @@
     <Compile Update="Essentials\GameObjectsGame1\Player.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Update="Essentials\GameObjectsGame2\Inventory.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Update="Essentials\GameObjectsGame2\Pickaxe.cs">
       <SubType>Component</SubType>
     </Compile>

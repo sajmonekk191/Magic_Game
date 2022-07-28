@@ -3,21 +3,22 @@ using System.Windows.Forms;
 
 namespace test_RPG.Essentials.GameObjectsGame2
 {
-    class Pickaxe : PictureBox
+    class Inventory : PictureBox
     {
         Game2 game;
-        public Pickaxe(Game2 Game)
+        public Inventory(Game2 Game)
         {
             game = Game;
         }
         public void Spawn()
         {
             this.BackColor = Color.Transparent;
-            this.Size = new Size(32, 32);
-            this.Left = 540;
-            this.Top = 580;
-            this.Tag = "pickaxe";
+            this.Size = new Size(180, 60);
+            this.Left = game.Width / 2 - 100;
+            this.Top = 590;
+            this.Tag = "inventory";
             this.Visible = true;
+            this.Image = Properties.Resources.Inventory;
             this.SizeMode = PictureBoxSizeMode.Zoom;
             game.Controls.Add(this);
         }

@@ -155,22 +155,10 @@ namespace test_RPG
         }
         private void Barrier()
         {
-            if (player.Location.X < 5)
-            {
-                player.Location = new Point(player.Location.X + 10, player.Location.Y);
-            }
-            if (player.Location.X > 930)
-            {
-                player.Location = new Point(player.Location.X - 10, player.Location.Y);
-            }
-            if (player.Location.Y < 5)
-            {
-                player.Location = new Point(player.Location.X, player.Location.Y + 10);
-            }
-            if (player.Location.Y > 585)
-            {
-                player.Location = new Point(player.Location.X, player.Location.Y - 10);
-            }
+            if (player.Location.X < 5) player.Location = new Point(player.Location.X + 10, player.Location.Y);
+            if (player.Location.X > 930) player.Location = new Point(player.Location.X - 10, player.Location.Y);
+            if (player.Location.Y < 5) player.Location = new Point(player.Location.X, player.Location.Y + 10);
+            if (player.Location.Y > 585) player.Location = new Point(player.Location.X, player.Location.Y - 10);
         }
     }
 }
