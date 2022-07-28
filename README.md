@@ -1,4 +1,4 @@
 # Magic_Game
 
--Multiple games in one
--Fun project
+*Multiple games in one
+*Fun project
