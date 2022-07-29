@@ -30,12 +30,12 @@ namespace test_RPG
             GameTimer.Enabled = true;
             timeleft.Enabled = true;
             GameTimer.Interval = 100;
-            GameTimer.Interval = hodnoty.FPS;
+            GameTimer.Interval = Values.FPS;
             GameTimer.Tick += new EventHandler(Updater);
             timeleft.Tick += new EventHandler(timeleftevent);
             timebar.Value = 100;
-            levellbl.Text = "Level: " + hodnoty.level;
-            scorelbl.Text = "Score: " + hodnoty.score;
+            levellbl.Text = "Level: " + Values.level;
+            scorelbl.Text = "Score: " + Values.score;
         }
         private void Updater(Object Object, EventArgs EventArgs)
         {
@@ -74,9 +74,9 @@ namespace test_RPG
                     if (player.Bounds.IntersectsWith(i.Bounds))
                     {
                         foodeaten = true;
-                        hodnoty.score++;
+                        Values.score++;
                         this.Controls.Remove(i);
-                        scorelbl.Text = "Score: " + hodnoty.score.ToString();
+                        scorelbl.Text = "Score: " + Values.score.ToString();
                         try { timebar.Value += 10; }
                         catch { timebar.Value = 100; }
                     }
@@ -85,8 +85,8 @@ namespace test_RPG
                 {
                     if (player.Bounds.IntersectsWith(i.Bounds))
                     {
-                        hodnoty.level++;
-                        RenderLVL(hodnoty.level);
+                        Values.level++;
+                        RenderLVL(Values.level);
                         this.Controls.Remove(i);
                     }
                 }
@@ -94,15 +94,15 @@ namespace test_RPG
         }
         private void timeleftevent(Object myObject, EventArgs myEventArgs)
         {
-            if (hodnoty.score <= 10) ScoreCalculator(1);
-            if (hodnoty.score >= 10 && hodnoty.score <= 20) ScoreCalculator(2);
-            if (hodnoty.score >= 20 && hodnoty.score <= 30) ScoreCalculator(3);
+            if (Values.score <= 10) ScoreCalculator(1);
+            if (Values.score >= 10 && Values.score <= 20) ScoreCalculator(2);
+            if (Values.score >= 20 && Values.score <= 30) ScoreCalculator(3);
         }
         private void GameOver()
         {
             GameTimer.Enabled = false;
             timeleft.Enabled = false;
-            MessageBox.Show("Game Over!\nYour Score: " + hodnoty.score, "Game", MessageBoxButtons.OK);
+            MessageBox.Show("Game Over!\nYour Score: " + Values.score, "Game", MessageBoxButtons.OK);
             Environment.Exit(0);
         }
         private void ScoreCalculator(int value)
@@ -113,22 +113,22 @@ namespace test_RPG
         private void Gatepercent()
         {
             int value = 0;
-            if (hodnoty.score > 13)
+            if (Values.score > 13)
             {
                 value = random.Next(0, 10);
             }
-            if (hodnoty.score > 20)
+            if (Values.score > 20)
             {
                 value = random.Next(5, 10);
             }
-            if (hodnoty.score > 25)
+            if (Values.score > 25)
             {
                 value = random.Next(7, 10);
             }
             if (value > 8)
             {
                 gate.Spawn();
-                if (hodnoty.level == 2) gate.Image = Properties.Resources.Final_Gate;
+                if (Values.level == 2) gate.Image = Properties.Resources.Final_Gate;
                 gate.Location = new Point(random.Next(0, 600), random.Next(0, 600));
                 gate.Visible = true;
             }
@@ -139,8 +139,8 @@ namespace test_RPG
             {
                 case 2:
                     timebar.Value = 100;
-                    levellbl.Text = "Level: " + hodnoty.level.ToString();
-                    scorelbl.Text = "Score: " + hodnoty.score.ToString();
+                    levellbl.Text = "Level: " + Values.level.ToString();
+                    scorelbl.Text = "Score: " + Values.score.ToString();
                     this.BackColor = Color.MediumBlue;
                     break;
                 case 3:

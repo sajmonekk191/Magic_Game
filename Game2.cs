@@ -1,30 +1,35 @@
-﻿using System;
+﻿// block counter - Easy
+// map generator - Hard
+// ore generator - Very Hard
+using System;
 using System.Drawing;
-using System.IO;
-using System.Threading;
 using System.Windows.Forms;
 using test_RPG.Essentials;
 using test_RPG.Essentials.GameObjectsGame2;
+using test_RPG.Properties;
 using static test_RPG.Essentials.GameObjectsGame2.Colliders;
 
 namespace test_RPG
 {
     public partial class Game2 : Form
     {
-        int x;
-        int y;
         Random rand = new Random();
         Player player;
         Pickaxe pickaxe;
-        Inventory inventory;
+        Inventory inventory; 
+        Hotbar hotbar;
+        Grass_Block grassblock;
+        Dirt_Block dirtblock;
+        Stone stone;
+        Wood wood;
+        Leaves leaves;
         private System.Windows.Forms.Timer GameTimer = new System.Windows.Forms.Timer();
         private int speed = 5;
         private int gravity = 10;
-        private int itemgravity = 5;
         private int FPS = 2;
         private int jumpintensity;
         private bool jump;
-        private int score = 0;
+        public static int score = 0;
         public Game2()
         {
             InitializeComponent();
@@ -32,13 +37,20 @@ namespace test_RPG
 
         private void Game2_Load(object sender, EventArgs e)
         {
-            this.Size = new System.Drawing.Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
+            this.Size = new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
             this.FormBorderStyle = FormBorderStyle.None;
             this.TopMost = true;
             this.WindowState = FormWindowState.Maximized;
-            player = new Player(this);
+            player = new Player(this); // optional argument spawn
             pickaxe = new Pickaxe(this);
             inventory = new Inventory(this);
+            hotbar = new Hotbar(this);
+            grassblock = new Grass_Block(this);
+            dirtblock = new Dirt_Block(this);
+            stone = new Stone(this);
+            wood = new Wood(this);
+            leaves = new Leaves(this);
+            hotbar.makeslotfull();
             player.Spawn();
             pickaxe.Spawn();
             inventory.Spawn();
@@ -46,12 +58,13 @@ namespace test_RPG
             pickaxe.BringToFront();
             player.Location = new Point(19, 428);
             pickaxe.Location = new Point(player.Location.X + 38, player.Location.Y + 12);
-            inventory.Location = new Point(860, 1020);
+            inventory.Location = new Point(680, 1020);
             GameTimer.Enabled = true;
             GameTimer.Interval = FPS;
             GameTimer.Tick += new EventHandler(Updater);
             this.Cursor = new Cursor("Crosshair.cur");
-            RenderLevel(hodnoty.level);
+            RenderLevel(Values.level);
+            counterlbl.Visible = true;
         }
         private void Updater(Object Object, EventArgs eventArgs)
         {
@@ -64,42 +77,33 @@ namespace test_RPG
             if (jump)
             {
                 gravity = -10;
-                jumpintensity -= 1;
+                jumpintensity--;
             }
             else gravity = 10;
             if (Imports.isLeftPressed())
             {
-                hodnoty.isleft = true;
+                Values.isleft = true;
                 player.Left -= speed;
-                InventoryLoop(hodnoty.inventoryindex);
+                InventorySelector(hotbar.SlotName[Values.inventoryindex], Values.isleft);
                 pickaxe.Location = new Point(player.Location.X - 28, player.Location.Y + 12);
             }
             if (Imports.isRightPressed())
             {
-                hodnoty.isleft = false;
+                Values.isleft = false;
                 player.Left += speed;
-                InventoryLoop(hodnoty.inventoryindex);
+                InventorySelector(hotbar.SlotName[Values.inventoryindex], Values.isleft);
                 pickaxe.Location = new Point(player.Location.X + 38, player.Location.Y + 12);
             }
-            if (Imports.isinventoryindex1())
+            int value = Imports.inventoryindex();
+            if (value != 9)
             {
-                hodnoty.inventoryindex = 1;
-                InventorySelector("sword", hodnoty.isleft);
-
-            }
-            if (Imports.isinventoryindex2())
-            {
-                hodnoty.inventoryindex = 2;
-                InventorySelector("pickaxe", hodnoty.isleft);
-            }
-            if (Imports.isinventoryindex3())
-            {
-                hodnoty.inventoryindex = 3;
-                InventorySelector("axe", hodnoty.isleft);
+                Values.inventoryindex = value;
+                InventorySelector(hotbar.SlotName[Values.inventoryindex], Values.isleft);
+                counterlbl.Text = hotbar.SlotName[Values.inventoryindex];
             }
             foreach (Control i in this.Controls)
             {
-                if (i is PictureBox && i.Tag == "breakable")
+                if (i is PictureBox && i.Tag == "block")
                 {
                     if (PlayerCollider(player).IntersectsWith(BlockColliderDown(i.Bounds)))
                     {
@@ -122,16 +126,70 @@ namespace test_RPG
                     var MousePos = this.PointToClient(Cursor.Position);
                     if (MouseCollider(MousePos.X, MousePos.Y).IntersectsWith(i.Bounds) && MouseCollider(MousePos.X, MousePos.Y).IntersectsWith(RangeCalculator(player.Location.X, player.Location.Y)) && Imports.isAttackPressed())
                     {
-                        Image res = i.BackgroundImage;
+                        if (i.Name.Contains("Grass") && hotbar.SlotName[Values.inventoryindex] == "Shovel") grassblock.Spawn(i.Location.X + 10, i.Location.Y + 30, 25, 25, "drop");
+                        else if (i.Name.Contains("Dirt") && hotbar.SlotName[Values.inventoryindex] == "Shovel") dirtblock.Spawn(i.Location.X + 10, i.Location.Y + 30, 25, 25, "drop");
+                        else if (i.Name.Contains("Stone") && hotbar.SlotName[Values.inventoryindex] == "Pickaxe") stone.Spawn(i.Location.X + 10, i.Location.Y + 30, 25, 25, "drop");
+                        else if (i.Name.Contains("Wood") && hotbar.SlotName[Values.inventoryindex] == "Axe") wood.Spawn(i.Location.X + 10, i.Location.Y + 30, 25, 25, "drop");
+                        else if (i.Name.Contains("Leaves")) leaves.Spawn(i.Location.X + 10, i.Location.Y + 30, 25, 25, "drop");
+                        else return;
                         i.Dispose();
-                        MakeItem(res, "item", Color.Transparent, 25, 25, i.Location.X + 10, i.Location.Y + 30, false);
                     }
                     pickaxe.Location = new Point(pickaxe.Location.X, player.Location.Y + 12);
                 }
-                if (i is PictureBox && i.Tag == "item")
+                if (i is PictureBox && i.Tag == "drop")
                 {
                     if (PlayerCollider(player).IntersectsWith(i.Bounds))
                     {
+                        if (i.Name.Contains("Grass"))
+                        {
+                            hotbar.grasscount++;
+                            if (!hotbar.grassStacked)
+                            {
+                                hotbar.grassStacked = true;
+                                hotbar.ApplyFirstEmptySlot(Resources.Grass_Block, "Grass_Block");
+                            }
+                            foreach (Control g in this.Controls) if (g is PictureBox && g.Tag == "item") g.BringToFront();
+                        }
+                        else if (i.Name.Contains("Dirt"))
+                        {
+                            hotbar.dirtcount++;
+                            if (!hotbar.dirtStacked)
+                            {
+                                hotbar.dirtStacked = true;
+                                hotbar.ApplyFirstEmptySlot(Resources.Dirt_Block, "Dirt_Block");
+                            }
+                            foreach (Control g in this.Controls) if (g is PictureBox && g.Tag == "item") g.BringToFront();
+                        }
+                        else if (i.Name.Contains("Stone"))
+                        {
+                            hotbar.stonecount++;
+                            if (!hotbar.stoneStacked)
+                            {
+                                hotbar.stoneStacked = true;
+                                hotbar.ApplyFirstEmptySlot(Resources.Stone, "Stone");
+                            }
+                            foreach (Control g in this.Controls) if (g is PictureBox && g.Tag == "item") g.BringToFront();
+                        }
+                        else if (i.Name.Contains("Wood"))
+                        {
+                            hotbar.woodcount++;
+                            if (!hotbar.woodStacked)
+                            {
+                                hotbar.woodStacked = true;
+                                hotbar.ApplyFirstEmptySlot(Resources.Wood, "Wood");
+                            }
+                            foreach (Control g in this.Controls) if (g is PictureBox && g.Tag == "item") g.BringToFront();
+                        }
+                        else if (i.Name.Contains("Leaves"))
+                        {
+                            hotbar.leavescount++;
+                            if (!hotbar.leavesStacked)
+                            {
+                                hotbar.leavesStacked = true;
+                                hotbar.ApplyFirstEmptySlot(Resources.Leaves, "Leaves");
+                            }
+                            foreach (Control g in this.Controls) if (g is PictureBox && g.Tag == "item") g.BringToFront();
+                        }
                         score++;
                         scorelbl.Text = "Score: " + score;
                         i.Dispose();
@@ -146,48 +204,50 @@ namespace test_RPG
             switch (room)
             {
                 case 3:
+                    int x;
+                    int y;
                     // Ground //
                     for (int g = 0; g < 37; g++)
                     {
                         x = 52 * g;
                         y = 760;
-                        MakePlatforms(Properties.Resources.Grass_Block, "breakable", x, y, true);
+                        grassblock.Spawn(x, y, 52, 52, "block");
                     }
                     for (int d = 0; d < 37; d++)
                     {
                         x = 52 * d;
                         y = 812;
-                        MakePlatforms(Properties.Resources.Dirt_Block, "breakable", x, y, true);
+                        dirtblock.Spawn(x, y, 52, 52, "block");
                     }
                     for (int e = 0; e < 37; e++)
                     {
                         x = 52 * e;
                         y = 864;
-                        MakePlatforms(Properties.Resources.Dirt_Block, "breakable", x, y, true);
+                        dirtblock.Spawn(x, y, 52 ,52, "block");
                     }
                     for (int e = 0; e < 37; e++)
                     {
                         x = 52 * e;
                         y = 916;
-                        MakePlatforms(Properties.Resources.Stone, "breakable", x, y, true);
+                        stone.Spawn(x, y, 52, 52, "block");
                     }
                     for (int e = 0; e < 37; e++)
                     {
                         x = 52 * e;
                         y = 968;
-                        MakePlatforms(Properties.Resources.Stone, "breakable", x, y, true);
+                        stone.Spawn(x, y, 52, 52, "block");
                     }
                     for (int e = 0; e < 37; e++)
                     {
                         x = 52 * e;
                         y = 1020;
-                        MakePlatforms(Properties.Resources.Stone, "breakable", x, y, true);
+                        stone.Spawn(x, y, 52, 52, "block");
                     }
                     for (int e = 0; e < 37; e++)
                     {
                         x = 52 * e;
                         y = 1072;
-                        MakePlatforms(Properties.Resources.Stone, "breakable", x, y, true);
+                        stone.Spawn(x, y, 52 ,52, "block");
                     }
                     // Ground //
 
@@ -198,49 +258,17 @@ namespace test_RPG
                     // Tree //
 
                     // Inventory //
-                    x = 866;
-                    y = 1026;
-                    MakeItem(Properties.Resources.Diamond_Sword_Right, "hotbar", Color.DimGray, 48, 48, x, y, false);
-                    x = x + 60;
-                    MakeItem(Properties.Resources.Diamond_Pickaxe_Right, "hotbar", Color.DimGray, 48, 48, x, y, false);
-                    x = x + 60;
-                    MakeItem(Properties.Resources.Diamond_Axe_Right, "hotbar", Color.DimGray, 48, 48, x, y, false);
+                    hotbar.ApplyFirstEmptySlot(Resources.Diamond_Sword_Left, "Sword");
+                    hotbar.ApplyFirstEmptySlot(Resources.Diamond_Pickaxe_Left, "Pickaxe");
+                    hotbar.ApplyFirstEmptySlot(Resources.Diamond_Axe_Left, "Axe");
+                    hotbar.ApplyFirstEmptySlot(Resources.Diamond_Shovel_Left, "Shovel");
                     // Inventory //
                     pickaxe.SendToBack();
                     player.SendToBack();
                     foreach (Control i in this.Controls) if (i is PictureBox && i.Tag == "hotbar") i.BringToFront();
+                    foreach (Control i in this.Controls) if (i is PictureBox && i.Tag == "item") i.BringToFront();
                     break;
             }
-        }
-        private void MakePlatforms(Image material, string tag, int x1, int y1, bool backimg)
-        {
-            PictureBox block = new PictureBox();
-            block.Tag = tag;
-            block.BackColor = Color.Transparent;
-            block.Height = 52;
-            block.Width = 52;
-            block.Image = material;
-            if (backimg) block.BackgroundImage = material;
-            block.SizeMode = PictureBoxSizeMode.Zoom;
-            block.Location = new Point(x1, y1);
-            block.BringToFront();
-
-            this.Controls.Add(block);
-        }
-        private void MakeItem(Image material, string tag, Color color, int x1, int y1, int x2, int y2, bool backimg)
-        {
-            PictureBox item = new PictureBox();
-            item.Tag = tag;
-            item.BackColor = color;
-            item.Height = x1;
-            item.Width = y1;
-            item.Image = material;
-            if(backimg) item.BackgroundImage = material;
-            item.SizeMode = PictureBoxSizeMode.Zoom;
-            item.Location = new Point(x2, y2);
-            item.BringToFront();
-
-            this.Controls.Add(item);
         }
         private void Barrier()
         {
@@ -251,32 +279,41 @@ namespace test_RPG
         {
             switch (selected)
             {
-                case "sword":
-                    if (isleft) pickaxe.Image = Properties.Resources.Diamond_Sword_Left;
-                    else pickaxe.Image = Properties.Resources.Diamond_Sword_Right;
+                case "Sword":
+                    if (isleft) pickaxe.Image = Resources.Diamond_Sword_Left;
+                    else pickaxe.Image = Resources.Diamond_Sword_Right;
                     break;
-                case "pickaxe":
-                    if (isleft) pickaxe.Image = Properties.Resources.Diamond_Pickaxe_Left;
-                    else pickaxe.Image = Properties.Resources.Diamond_Pickaxe_Right;
+                case "Pickaxe":
+                    if (isleft) pickaxe.Image = Resources.Diamond_Pickaxe_Left;
+                    else pickaxe.Image = Resources.Diamond_Pickaxe_Right;
                     break;
-                case "axe":
-                    if (isleft) pickaxe.Image = Properties.Resources.Diamond_Axe_Left;
-                    else pickaxe.Image = Properties.Resources.Diamond_Axe_Right;
+                case "Axe":
+                    if (isleft) pickaxe.Image = Resources.Diamond_Axe_Left;
+                    else pickaxe.Image = Resources.Diamond_Axe_Right;
                     break;
-            }
-        }
-        private void InventoryLoop(int slot)
-        {
-            switch (slot)
-            {
-                case 1:
-                    InventorySelector("sword", hodnoty.isleft);
+                case "Grass_Block":
+                    if (isleft) pickaxe.Image = Resources.Grass_Block;
+                    else pickaxe.Image = Resources.Grass_Block;
                     break;
-                case 2:
-                    InventorySelector("pickaxe", hodnoty.isleft);
+                case "Dirt_Block":
+                    if (isleft) pickaxe.Image = Resources.Dirt_Block;
+                    else pickaxe.Image = Resources.Dirt_Block;
                     break;
-                case 3:
-                    InventorySelector("axe", hodnoty.isleft);
+                case "Stone":
+                    if (isleft) pickaxe.Image = Resources.Stone;
+                    else pickaxe.Image = Resources.Stone;
+                    break;
+                case "Wood":
+                    if (isleft) pickaxe.Image = Resources.Wood;
+                    else pickaxe.Image = Resources.Wood;
+                    break;
+                case "Leaves":
+                    if (isleft) pickaxe.Image = Resources.Leaves;
+                    else pickaxe.Image = Resources.Leaves;
+                    break;
+                case "Shovel":
+                    if (isleft) pickaxe.Image = Resources.Diamond_Shovel_Left;
+                    else pickaxe.Image = Resources.Diamond_Shovel_Right;
                     break;
             }
         }
@@ -288,7 +325,7 @@ namespace test_RPG
             for (int e = 0; e < 3; e++)
             {
                 y1 = y + (52 * e);
-                MakePlatforms(Properties.Resources.Wood, "breakable", x1, y1, true);
+                wood.Spawn(x1, y1, 52, 52, "block");
             }
             x1 = x1 - 2 * ofset;
             y1 = y1 - 5 * ofset;
@@ -297,7 +334,7 @@ namespace test_RPG
                 if (e >= 0 && e <= 2)
                 {
                     x1 = x1 + 52;
-                    MakePlatforms(Properties.Resources.Leaves, "breakable", x1, y1, true);
+                    leaves.Spawn(x1, y1, 52, 52, "block");
                     if (e > 1)
                     {
                         x1 = x1 - 4 * ofset;
@@ -309,7 +346,7 @@ namespace test_RPG
                     for (int g = 0; g < 5; g++)
                     {
                         x1 = x1 + 52;
-                        MakePlatforms(Properties.Resources.Leaves, "breakable", x1, y1, true);
+                        leaves.Spawn(x1, y1, 52, 52, "block");
                         if (g > 3)
                         {
                             y1 = y1 + 52;
@@ -322,7 +359,7 @@ namespace test_RPG
                     for (int g = 0; g < 5; g++)
                     {
                         x1 = x1 + 52;
-                        MakePlatforms(Properties.Resources.Leaves, "breakable", x1, y1, true);
+                        leaves.Spawn(x1, y1, 52, 52, "block");
                     }
                 }
             }

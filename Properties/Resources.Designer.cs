@@ -103,6 +103,26 @@ namespace test_RPG.Properties {
         /// <summary>
         ///   Vyhledává lokalizovaný prostředek typu System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Diamond_Shovel_Left {
+            get {
+                object obj = ResourceManager.GetObject("Diamond_Shovel_Left", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Diamond_Shovel_Right {
+            get {
+                object obj = ResourceManager.GetObject("Diamond_Shovel_Right", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Diamond_Sword_Left {
             get {
                 object obj = ResourceManager.GetObject("Diamond_Sword_Left", resourceCulture);
@@ -173,16 +193,6 @@ namespace test_RPG.Properties {
         /// <summary>
         ///   Vyhledává lokalizovaný prostředek typu System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Inventory {
-            get {
-                object obj = ResourceManager.GetObject("Inventory", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Vyhledává lokalizovaný prostředek typu System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap Leaves {
             get {
                 object obj = ResourceManager.GetObject("Leaves", resourceCulture);
@@ -233,16 +243,6 @@ namespace test_RPG.Properties {
         /// <summary>
         ///   Vyhledává lokalizovaný prostředek typu System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Selector {
-            get {
-                object obj = ResourceManager.GetObject("Selector", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Vyhledává lokalizovaný prostředek typu System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap Steve {
             get {
                 object obj = ResourceManager.GetObject("Steve", resourceCulture);
@@ -256,6 +256,16 @@ namespace test_RPG.Properties {
         internal static System.Drawing.Bitmap Stone {
             get {
                 object obj = ResourceManager.GetObject("Stone", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Toolbar {
+            get {
+                object obj = ResourceManager.GetObject("Toolbar", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
