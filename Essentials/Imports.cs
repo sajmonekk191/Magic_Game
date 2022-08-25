@@ -1,10 +1,14 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
+using System.Runtime.InteropServices;
+using System.Text;
 using System.Windows.Forms;
 
 namespace test_RPG.Essentials
 {
     class Imports
     {
+        [DllImport("winmm.dll")]
+        public static extern Int32 mciSendString(string command, StringBuilder buffer, int bufferSize, IntPtr hwndCallback);
         [DllImport("user32.dll")]
         public static extern short GetAsyncKeyState(Keys vKey);
 

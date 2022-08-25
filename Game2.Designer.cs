@@ -28,34 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.scorelbl = new System.Windows.Forms.Label();
-            this.counterlbl = new System.Windows.Forms.Label();
+            this.blockcount = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // scorelbl
+            // blockcount
             // 
-            this.scorelbl.AutoSize = true;
-            this.scorelbl.Font = new System.Drawing.Font("Segoe UI", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.scorelbl.ForeColor = System.Drawing.SystemColors.Control;
-            this.scorelbl.Location = new System.Drawing.Point(12, 9);
-            this.scorelbl.Name = "scorelbl";
-            this.scorelbl.Size = new System.Drawing.Size(81, 28);
-            this.scorelbl.TabIndex = 3;
-            this.scorelbl.Text = "Score: 1";
-            // 
-            // counterlbl
-            // 
-            this.counterlbl.AutoSize = true;
-            this.counterlbl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(116)))), ((int)(((byte)(116)))));
-            this.counterlbl.Font = new System.Drawing.Font("Segoe UI", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.counterlbl.ForeColor = System.Drawing.SystemColors.Control;
-            this.counterlbl.Location = new System.Drawing.Point(1797, 1042);
-            this.counterlbl.Name = "counterlbl";
-            this.counterlbl.Size = new System.Drawing.Size(79, 28);
-            this.counterlbl.TabIndex = 4;
-            this.counterlbl.Text = "counter";
-            this.counterlbl.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.counterlbl.Visible = false;
+            this.blockcount.AutoSize = true;
+            this.blockcount.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.blockcount.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.blockcount.Location = new System.Drawing.Point(12, 9);
+            this.blockcount.Name = "blockcount";
+            this.blockcount.Size = new System.Drawing.Size(113, 25);
+            this.blockcount.TabIndex = 0;
+            this.blockcount.Text = "Block Count";
             // 
             // Game2
             // 
@@ -63,8 +48,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.MediumTurquoise;
             this.ClientSize = new System.Drawing.Size(1904, 1041);
-            this.Controls.Add(this.counterlbl);
-            this.Controls.Add(this.scorelbl);
+            this.Controls.Add(this.blockcount);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "Game2";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -77,7 +61,6 @@
 
         #endregion
 
-        private System.Windows.Forms.Label scorelbl;
-        private System.Windows.Forms.Label counterlbl;
+        private System.Windows.Forms.Label blockcount;
     }
 }

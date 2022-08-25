@@ -1,18 +1,21 @@
-﻿// block counter - Easy
-// map generator - Hard
-// ore generator - Very Hard
+﻿// map generator - Hard
+// ore generator - Hard
+// Cords - Medium
 using System;
 using System.Drawing;
 using System.Windows.Forms;
 using test_RPG.Essentials;
 using test_RPG.Essentials.GameObjectsGame2;
 using test_RPG.Properties;
+using System.Media;
+using System.Text;
 using static test_RPG.Essentials.GameObjectsGame2.Colliders;
 
 namespace test_RPG
 {
     public partial class Game2 : Form
     {
+        private SoundPlayer media = new SoundPlayer("MainSong.wav");
         Random rand = new Random();
         Player player;
         Pickaxe pickaxe;
@@ -24,12 +27,14 @@ namespace test_RPG
         Wood wood;
         Leaves leaves;
         private System.Windows.Forms.Timer GameTimer = new System.Windows.Forms.Timer();
+        private System.Windows.Forms.Timer PlayerBreakCD = new System.Windows.Forms.Timer();
         private int speed = 5;
         private int gravity = 10;
         private int FPS = 2;
         private int jumpintensity;
         private bool jump;
         public static int score = 0;
+        private bool BlockCD = true;
         public Game2()
         {
             InitializeComponent();
@@ -62,9 +67,11 @@ namespace test_RPG
             GameTimer.Enabled = true;
             GameTimer.Interval = FPS;
             GameTimer.Tick += new EventHandler(Updater);
+            PlayerBreakCD.Interval = 400;
+            PlayerBreakCD.Tick += new EventHandler(BlockBreakCD);
             this.Cursor = new Cursor("Crosshair.cur");
             RenderLevel(Values.level);
-            counterlbl.Visible = true;
+            media.PlayLooping();
         }
         private void Updater(Object Object, EventArgs eventArgs)
         {
@@ -99,7 +106,6 @@ namespace test_RPG
             {
                 Values.inventoryindex = value;
                 InventorySelector(hotbar.SlotName[Values.inventoryindex], Values.isleft);
-                counterlbl.Text = hotbar.SlotName[Values.inventoryindex];
             }
             foreach (Control i in this.Controls)
             {
@@ -124,13 +130,43 @@ namespace test_RPG
                         player.Top = i.Top - 71;
                     }
                     var MousePos = this.PointToClient(Cursor.Position);
-                    if (MouseCollider(MousePos.X, MousePos.Y).IntersectsWith(i.Bounds) && MouseCollider(MousePos.X, MousePos.Y).IntersectsWith(RangeCalculator(player.Location.X, player.Location.Y)) && Imports.isAttackPressed())
+                    if (MouseCollider(MousePos.X, MousePos.Y).IntersectsWith(i.Bounds) && MouseCollider(MousePos.X, MousePos.Y).IntersectsWith(RangeCalculator(player.Location.X, player.Location.Y)) && Imports.isAttackPressed() && BlockCD)
                     {
-                        if (i.Name.Contains("Grass") && hotbar.SlotName[Values.inventoryindex] == "Shovel") grassblock.Spawn(i.Location.X + 10, i.Location.Y + 30, 25, 25, "drop");
-                        else if (i.Name.Contains("Dirt") && hotbar.SlotName[Values.inventoryindex] == "Shovel") dirtblock.Spawn(i.Location.X + 10, i.Location.Y + 30, 25, 25, "drop");
-                        else if (i.Name.Contains("Stone") && hotbar.SlotName[Values.inventoryindex] == "Pickaxe") stone.Spawn(i.Location.X + 10, i.Location.Y + 30, 25, 25, "drop");
-                        else if (i.Name.Contains("Wood") && hotbar.SlotName[Values.inventoryindex] == "Axe") wood.Spawn(i.Location.X + 10, i.Location.Y + 30, 25, 25, "drop");
-                        else if (i.Name.Contains("Leaves")) leaves.Spawn(i.Location.X + 10, i.Location.Y + 30, 25, 25, "drop");
+                        if (i.Name.Contains("Grass") && hotbar.SlotName[Values.inventoryindex] == "Shovel")
+                        {
+                            PlayerBreakCD.Enabled = true;
+                            BlockCD = false;
+                            playsound("Grass.wav");
+                            grassblock.Spawn(i.Location.X + 10, i.Location.Y + 30, 25, 25, "drop");
+                        }
+                        else if (i.Name.Contains("Dirt") && hotbar.SlotName[Values.inventoryindex] == "Shovel")
+                        {
+                            PlayerBreakCD.Enabled = true;
+                            BlockCD = false;
+                            playsound("Dirt.wav");
+                            dirtblock.Spawn(i.Location.X + 10, i.Location.Y + 30, 25, 25, "drop");
+                        }
+                        else if (i.Name.Contains("Stone") && hotbar.SlotName[Values.inventoryindex] == "Pickaxe")
+                        {
+                            PlayerBreakCD.Enabled = true;
+                            BlockCD = false;
+                            playsound("Stone.wav");
+                            stone.Spawn(i.Location.X + 10, i.Location.Y + 30, 25, 25, "drop");
+                        }
+                        else if (i.Name.Contains("Wood") && hotbar.SlotName[Values.inventoryindex] == "Axe")
+                        {
+                            PlayerBreakCD.Enabled = true;
+                            BlockCD = false;
+                            playsound("Wood.wav");
+                            wood.Spawn(i.Location.X + 10, i.Location.Y + 30, 25, 25, "drop");
+                        }
+                        else if (i.Name.Contains("Leaves"))
+                        {
+                            PlayerBreakCD.Enabled = true;
+                            BlockCD = false;
+                            playsound("Leaves.wav");
+                            leaves.Spawn(i.Location.X + 10, i.Location.Y + 30, 25, 25, "drop");
+                        }
                         else return;
                         i.Dispose();
                     }
@@ -140,6 +176,7 @@ namespace test_RPG
                 {
                     if (PlayerCollider(player).IntersectsWith(i.Bounds))
                     {
+                        playsound("PickBlock.wav");
                         if (i.Name.Contains("Grass"))
                         {
                             hotbar.grasscount++;
@@ -191,7 +228,6 @@ namespace test_RPG
                             foreach (Control g in this.Controls) if (g is PictureBox && g.Tag == "item") g.BringToFront();
                         }
                         score++;
-                        scorelbl.Text = "Score: " + score;
                         i.Dispose();
                     }
                 }
@@ -280,38 +316,47 @@ namespace test_RPG
             switch (selected)
             {
                 case "Sword":
+                    blockcount.Text = "Sword";
                     if (isleft) pickaxe.Image = Resources.Diamond_Sword_Left;
                     else pickaxe.Image = Resources.Diamond_Sword_Right;
                     break;
                 case "Pickaxe":
+                    blockcount.Text = "Pickaxe";
                     if (isleft) pickaxe.Image = Resources.Diamond_Pickaxe_Left;
                     else pickaxe.Image = Resources.Diamond_Pickaxe_Right;
                     break;
                 case "Axe":
+                    blockcount.Text = "Axe";
                     if (isleft) pickaxe.Image = Resources.Diamond_Axe_Left;
                     else pickaxe.Image = Resources.Diamond_Axe_Right;
                     break;
                 case "Grass_Block":
+                    blockcount.Text = "Grass Block: " + hotbar.grasscount;
                     if (isleft) pickaxe.Image = Resources.Grass_Block;
                     else pickaxe.Image = Resources.Grass_Block;
                     break;
                 case "Dirt_Block":
+                    blockcount.Text = "Dirt: " + hotbar.dirtcount;
                     if (isleft) pickaxe.Image = Resources.Dirt_Block;
                     else pickaxe.Image = Resources.Dirt_Block;
                     break;
                 case "Stone":
+                    blockcount.Text = "Stone: " + hotbar.stonecount;
                     if (isleft) pickaxe.Image = Resources.Stone;
                     else pickaxe.Image = Resources.Stone;
                     break;
                 case "Wood":
+                    blockcount.Text = "Wood: " + hotbar.woodcount;
                     if (isleft) pickaxe.Image = Resources.Wood;
                     else pickaxe.Image = Resources.Wood;
                     break;
                 case "Leaves":
+                    blockcount.Text = "Leaves: " + hotbar.leavescount;
                     if (isleft) pickaxe.Image = Resources.Leaves;
                     else pickaxe.Image = Resources.Leaves;
                     break;
                 case "Shovel":
+                    blockcount.Text = "Shovel";
                     if (isleft) pickaxe.Image = Resources.Diamond_Shovel_Left;
                     else pickaxe.Image = Resources.Diamond_Shovel_Right;
                     break;
@@ -363,6 +408,25 @@ namespace test_RPG
                     }
                 }
             }
+        }
+        private void playsound(string path)
+        {
+            StringBuilder sb = new StringBuilder();
+            Imports.mciSendString("open \"" + path + "\" alias ", sb, 0, IntPtr.Zero);
+            Imports.mciSendString("play " + path, sb, 0, IntPtr.Zero);
+        }
+        private void BlockBreakCD(Object Object, EventArgs eventArgs)
+        {
+            BlockCD = true;
+            PlayerBreakCD.Enabled = false;
+        }
+        private Point GetCordsX(int x)
+        {
+            return new Point(52 * x);
+        }
+        private Point GetCordsY(int y)
+        {
+            return new Point(52 * y);
         }
     }
 }

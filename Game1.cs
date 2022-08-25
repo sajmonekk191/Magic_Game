@@ -102,8 +102,15 @@ namespace test_RPG
         {
             GameTimer.Enabled = false;
             timeleft.Enabled = false;
-            MessageBox.Show("Game Over!\nYour Score: " + Values.score, "Game", MessageBoxButtons.OK);
-            Environment.Exit(0);
+            if (MessageBox.Show("Game Over!\nYour Score: " + Values.score, "Game", MessageBoxButtons.RetryCancel) == DialogResult.Retry)
+            {
+                Values.score = 0;
+                Values.level = 1;
+                this.Hide();
+                Game1 gam = new Game1();
+                gam.Show();
+            }
+            else Environment.Exit(0);
         }
         private void ScoreCalculator(int value)
         {
@@ -117,13 +124,13 @@ namespace test_RPG
             {
                 value = random.Next(0, 10);
             }
-            if (Values.score > 20)
+            if (Values.score > 16)
+            {
+                value = random.Next(2, 10);
+            }
+            if (Values.score > 19)
             {
                 value = random.Next(5, 10);
-            }
-            if (Values.score > 25)
-            {
-                value = random.Next(7, 10);
             }
             if (value > 8)
             {
